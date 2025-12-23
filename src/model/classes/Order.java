@@ -7,17 +7,19 @@ public class Order {
     private Car car;
     private String carFaultDesc;
     private boolean isDone;
+    private boolean isPaid;
     private Mechanic mechanic;
     private RepairType repairType;
     private PaymentType paymentType;
 
-    public Order(Car car, String carFaultDesc, Mechanic mechanic, RepairType repairType, PaymentType paymentType, boolean isDone) {
+    public Order(Car car, String carFaultDesc, Mechanic mechanic, RepairType repairType, PaymentType paymentType, boolean isDone, boolean isPaid) {
         this.car = car;
         this.carFaultDesc = carFaultDesc;
         this.mechanic = mechanic;
         this.repairType = repairType;
         this.paymentType = paymentType;
         this.isDone = isDone;
+        this.isPaid = isPaid;
     }
 
     public void executeOrder(){
@@ -37,8 +39,16 @@ public class Order {
         isDone = done;
     }
 
+    public boolean isPaid() {
+        return isPaid;
+    }
+
+    public void setPaid(boolean paid) {
+        isPaid = paid;
+    }
+
     @Override
     public String toString() {
-        return "Zlecenie: Samochod - (" + car + "), Typ zlecenia - " + repairType + ", Opis zlecenia - " + carFaultDesc + ", Metoda płatności - " + paymentType;
+        return "Zlecenie: Samochod - (" + car + "), Typ zlecenia - " + repairType + ", Opis zlecenia - " + carFaultDesc + ", Metoda płatności - " + paymentType + ", Czy wykonane - " + isDone + ", Czy zapłacone - " + isPaid;
     }
 }

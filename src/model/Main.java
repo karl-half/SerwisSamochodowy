@@ -27,8 +27,8 @@ public class Main {
         Car samochod5 = new Car("RedbullRacing", "RB18", "M1MAX");
         Car samochod6 = new Car("Renault", "Megane", "RT84272");
 
-        Order zlecenie1 = new Order(samochod1, "Wymiana oleju", mechanik1, RepairType.MECHANIC, PaymentType.MONEY, false);
-        Order zlecenie2 = new Order(samochod2, "Wymiana ECU", mechanik1, RepairType.ELECTRONIC, PaymentType.CARD, false);
+        Order zlecenie1 = new Order(samochod1, "Wymiana oleju", mechanik1, RepairType.MECHANIC, PaymentType.MONEY, true, false);
+        Order zlecenie2 = new Order(samochod2, "Wymiana ECU", mechanik1, RepairType.ELECTRONIC, PaymentType.CARD, false, true);
 
         mechanics.add(mechanik1);
         mechanics.add(mechanik2);
@@ -109,7 +109,7 @@ public class Main {
         System.out.println();
         System.out.println();
 
-        return new Order(car, description, mechanic, repairType, paymentType, false);
+        return new Order(car, description, mechanic, repairType, paymentType, false, false);
     }
 
     private static void executeOrder(LinkedList<Order> orders, LinkedList<Mechanic> mechanics, LinkedList<Car> cars) {
@@ -122,7 +122,10 @@ public class Main {
         }
         int carIndex = scanner.nextInt();
         Order order = ordersArray[carIndex-1];
-        order.executeOrder();
+        if (!order.isDone()){
+            order.executeOrder();
+            order.setDone(true);
+        } else System.out.println("Zlecenie jest już wykonane.");
 
         System.out.println();
         System.out.println();
@@ -148,9 +151,9 @@ public class Main {
         int orderIndex = scanner.nextInt();
         Order order = ordersArray[orderIndex-1];
 
-        if (!order.isDone()){
+        if (!order.isPaid()){
             order.orderPayment();
-            order.setDone(true);
+            order.setPaid(true);
         } else System.out.println("Zlecenie jest już zapłacone.");
 
         System.out.println();
