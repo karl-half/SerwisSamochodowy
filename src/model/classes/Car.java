@@ -1,7 +1,5 @@
 package model.classes;
 
-import java.time.LocalDate;
-
 public class Car {
     private String brand;
     private String model;

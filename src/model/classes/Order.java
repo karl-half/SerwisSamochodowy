@@ -3,8 +3,6 @@ package model.classes;
 import model.enums.PaymentType;
 import model.enums.RepairType;
 
-import java.time.LocalDate;
-
 public class Order {
     private Car car;
     private String carFaultDesc;
@@ -25,6 +23,18 @@ public class Order {
     public void executeOrder(){
         System.out.println("Wykonano zlecenie");
         isDone = true;
+    }
+
+    public void orderPayment(){
+        System.out.println("Zapłacono za zlecenie za pomocą: " + paymentType);
+    }
+
+    public boolean isDone() {
+        return isDone;
+    }
+
+    public void setDone(boolean done) {
+        isDone = done;
     }
 
     @Override

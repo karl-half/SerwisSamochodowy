@@ -6,13 +6,11 @@ import model.classes.Order;
 import model.enums.PaymentType;
 import model.enums.RepairType;
 
-import java.time.LocalDate;
 import java.util.LinkedList;
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
         LinkedList<Mechanic> mechanics = new LinkedList<>();
         LinkedList<Order> orders = new LinkedList<>();
         LinkedList<Car> cars = new LinkedList<>();
@@ -108,31 +106,78 @@ public class Main {
 
         scanner.nextLine();
 
+        System.out.println();
+        System.out.println();
+
         return new Order(car, description, mechanic, repairType, paymentType, false);
     }
 
-    private static void addCar() {
+    private static void executeOrder(LinkedList<Order> orders, LinkedList<Mechanic> mechanics, LinkedList<Car> cars) {
         Scanner scanner = new Scanner(System.in);
+        Order[] ordersArray =  orders.toArray(new Order[0]);
 
-//        Car car = new Car();
-//        return car;
+        System.out.println("Wybierz numer zlecenia, które ma zostać wykonane:");
+        for (int i = 0; i < ordersArray.length; i++) {
+            System.out.println(i+1 + " --- " + ordersArray[i]);
+        }
+        int carIndex = scanner.nextInt();
+        Order order = ordersArray[carIndex-1];
+        order.executeOrder();
+
+        System.out.println();
+        System.out.println();
+    }
+
+    private static void showOrders(LinkedList<Order> orders, LinkedList<Mechanic> mechanics, LinkedList<Car> cars){
+        for (Order order : orders){
+            System.out.println(order);
+        }
+
+        System.out.println();
+        System.out.println();
+    }
+
+    private static void orderPayment(LinkedList<Order> orders, LinkedList<Mechanic> mechanics, LinkedList<Car> cars){
+        Scanner scanner = new Scanner(System.in);
+        Order[] ordersArray =  orders.toArray(new Order[0]);
+
+        System.out.println("Wybierz numer zlecenia, za które chcesz zapłacić:");
+        for (int i = 0; i < ordersArray.length; i++) {
+            System.out.println(i+1 + " --- " + ordersArray[i]);
+        }
+        int orderIndex = scanner.nextInt();
+        Order order = ordersArray[orderIndex-1];
+
+        if (!order.isDone()){
+            order.orderPayment();
+            order.setDone(true);
+        } else System.out.println("Zlecenie jest już zapłacone.");
+
+        System.out.println();
+        System.out.println();
     }
 
     private static void showMenu(LinkedList<Order> orders, LinkedList<Mechanic> mechanics, LinkedList<Car> cars){
         Scanner scanner = new Scanner(System.in);
-        int userChoice;
+        int userChoice = 0;
 
-        System.out.println("Wybierz opcję:");
-        System.out.println("1 - Utwórz zlecenie");
-        System.out.println("2 - Wykonaj zlecenie");
-        System.out.println("3 - Sprawdź zlecenia/raporty");
-        System.out.println("4 - Zapłać za zlecenie");
-        userChoice = scanner.nextInt();
+        do {
+            System.out.println("Wybierz opcję:");
+            System.out.println("1 - Utwórz zlecenie");
+            System.out.println("2 - Wykonaj zlecenie");
+            System.out.println("3 - Sprawdź zlecenia/raporty");
+            System.out.println("4 - Zapłać za zlecenie");
+            System.out.println("5 - Wyjście");
+            userChoice = scanner.nextInt();
 
-        switch (userChoice){
-            case 1 -> orders.add(newOrder(mechanics, cars));
-            case 2 -> System.out.println("placeholder");
-            case 3 -> System.out.println("placeholder");
-        }
+            switch (userChoice){
+                case 1 -> orders.add(newOrder(mechanics, cars));
+                case 2 -> executeOrder(orders, mechanics, cars);
+                case 3 -> showOrders(orders, mechanics, cars);
+                case 4 -> orderPayment(orders, mechanics, cars);
+                case 5 -> System.out.println("Zamykanie...");
+                default -> System.out.println("Niepoprawny numer");
+            }
+        } while (userChoice != 5);
     }
 }
