@@ -2,29 +2,137 @@ package model;
 
 import model.classes.Mechanic;
 import model.classes.Car;
-import model.classes.CarServis;
 import model.classes.Order;
+import model.enums.PaymentType;
+import model.enums.RepairType;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        Mechanic mechanik1 = new Mechanic("Heniek", "Zbyrad", "Drobne usterki.");
+        Scanner scanner = new Scanner(System.in);
+        LinkedList<Mechanic> mechanics = new LinkedList<>();
+        LinkedList<Order> orders = new LinkedList<>();
+        LinkedList<Car> cars = new LinkedList<>();
 
-        Car samochod1 = new Car("Fiat", "Punto", "RT73251", LocalDate.of(2014, 1, 8));
+        Mechanic mechanik1 = new Mechanic("Heniek", "Zbyrad", 39, "Drobne usterki.");
+        Mechanic mechanik2 = new Mechanic("Bartosz", "Stonoga", 21, "Elektryka.");
+        Mechanic mechanik3 = new Mechanic("Adam", "Musztarda", 67, "Rozkładanie silnika.");
+        Mechanic mechanik4 = new Mechanic("Kuba", "Lorek", 46, "Regulacja wycieraczek w samochodach bez szyb.");
 
-        Order zlecenie1 = new Order(samochod1, "Wymiana oleju", LocalDate.of(2025, 8, 10));
+        Car samochod1 = new Car("Fiat", "Punto", "RT73251");
+        Car samochod2 = new Car("Ferrari", "911", "R1MANGO");
+        Car samochod3 = new Car("Rolls Royce", "Phantom", "RT27216");
+        Car samochod4 = new Car("Renault", "Clio", "KNS7251");
+        Car samochod5 = new Car("RedbullRacing", "RB18", "M1MAX");
+        Car samochod6 = new Car("Renault", "Megane", "RT84272");
+
+        Order zlecenie1 = new Order(samochod1, "Wymiana oleju", mechanik1, RepairType.MECHANIC, PaymentType.MONEY, false);
+        Order zlecenie2 = new Order(samochod2, "Wymiana ECU", mechanik1, RepairType.ELECTRONIC, PaymentType.CARD, false);
+
+        mechanics.add(mechanik1);
+        mechanics.add(mechanik2);
+        mechanics.add(mechanik3);
+        mechanics.add(mechanik4);
+
+        cars.add(samochod3);
+        cars.add(samochod4);
+        cars.add(samochod5);
+        cars.add(samochod6);
+
+        orders.add(zlecenie1);
+        orders.add(zlecenie2);
+
+        showMenu(orders, mechanics, cars);
+    }
+
+    private static Order newOrder(LinkedList<Mechanic> mechanics, LinkedList<Car> cars){
+        Scanner scanner = new Scanner(System.in);
+        Mechanic[] mechanicsArray =  mechanics.toArray(new Mechanic[0]);
+        Car[] carsArray =  cars.toArray(new Car[0]);
+
+//        Mechanik
+        System.out.println("Wybierz numer mechanika, który ma wykonać zlecenie:");
+        for (int i = 0; i < mechanicsArray.length; i++) {
+            System.out.println(i+1 + " --- " + mechanicsArray[i]);
+        }
+        int mechanicIndex = scanner.nextInt();
+        Mechanic mechanic = mechanicsArray[mechanicIndex-1];
+
+        scanner.nextLine();
+
+//        Samochód
+        System.out.println("Wybierz numer auta, na którym zlecenie ma zostać wykonane:");
+        for (int i = 0; i < carsArray.length; i++) {
+            System.out.println(i+1 + " --- " + carsArray[i]);
+        }
+        int carIndex = scanner.nextInt();
+        Car car = carsArray[carIndex-1];
+
+        scanner.nextLine();
+
+//        Opis
+        System.out.println("Wpisz opis zlecenia:");
+        String description = scanner.nextLine();
+
+//        Typ
+        System.out.println("Wybierz rodzaj zlecenia:");
+        System.out.println("1 - Mechaniczna");
+        System.out.println("2 - Elektroniczna");
+        System.out.println("3 - Lakierowanie");
+        System.out.println("4 - Przegląd pojazdu");
+        int userChoiceType = scanner.nextInt();
+        RepairType repairType = null;
+        switch (userChoiceType){
+            case 1 -> repairType = RepairType.MECHANIC;
+            case 2 -> repairType = RepairType.ELECTRONIC;
+            case 3 -> repairType = RepairType.VARNISHING;
+            case 4 -> repairType = RepairType.REVIEW;
+        }
 
 
-        ArrayList<Order> zlecenia = new ArrayList<>();
-        ArrayList<Car> samochody = new ArrayList<>();
+//        Płatność
+        System.out.println("Wybierz rodzaj płatności:");
+        System.out.println("1 - Gotówka");
+        System.out.println("2 - Blik");
+        System.out.println("3 - Karta Płatnicza");
+        int userChoicePayment = scanner.nextInt();
+        PaymentType paymentType = null;
+        switch (userChoicePayment){
+            case 1 -> paymentType = PaymentType.MONEY;
+            case 2 -> paymentType = PaymentType.BLIK;
+            case 3 -> paymentType = PaymentType.CARD;
+        }
 
-        zlecenia.add(zlecenie1);
-        samochody.add(samochod1);
+        scanner.nextLine();
 
-        CarServis serwis1 = new CarServis(zlecenia, samochody);
+        return new Order(car, description, mechanic, repairType, paymentType, false);
+    }
 
-        serwis1.showOrders();
+    private static void addCar() {
+        Scanner scanner = new Scanner(System.in);
+
+//        Car car = new Car();
+//        return car;
+    }
+
+    private static void showMenu(LinkedList<Order> orders, LinkedList<Mechanic> mechanics, LinkedList<Car> cars){
+        Scanner scanner = new Scanner(System.in);
+        int userChoice;
+
+        System.out.println("Wybierz opcję:");
+        System.out.println("1 - Utwórz zlecenie");
+        System.out.println("2 - Wykonaj zlecenie");
+        System.out.println("3 - Sprawdź zlecenia/raporty");
+        System.out.println("4 - Zapłać za zlecenie");
+        userChoice = scanner.nextInt();
+
+        switch (userChoice){
+            case 1 -> orders.add(newOrder(mechanics, cars));
+            case 2 -> System.out.println("placeholder");
+            case 3 -> System.out.println("placeholder");
+        }
     }
 }
